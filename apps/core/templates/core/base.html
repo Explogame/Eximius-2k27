@@ -7,13 +7,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> {% block title %}Eximius-2k27{% endblock %} </title>
+    <link rel="stylesheet" href="{% static 'static/base.css' %}">
 </head>
 <body>
 
     <header>
-        <nav>
+        <nav style="display: flex; gap: 20px; padding: 10px; border-bottom: 1px solid #ccc;">
+
+            <a href="{% url 'core:home' %}">Home</a>
+            <a href="{% url 'core:about' %}">About</a>
+            <a href="{% url 'core:contact' %}">Contact</a>
+
+            {% if user.is_authenticated %}
+            <span>Hi, {{ user.username }} </span>
+            <form action="{% url 'auth:logout' %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
+            <a href="{% url 'core:inbox' %}">Inbox</a>
+            {% else %}
             <a href="{% url 'auth:login' %}">Login</a>
-            <a href="#">Sign Up</a>
+            {% endif %}
         </nav>
     </header>
     

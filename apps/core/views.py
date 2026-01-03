@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 
 from .forms import ContactMessageForm
 from .models import ContactMessage
@@ -12,13 +13,12 @@ def home(request):
 def about(request):
     return render(request, 'core/about.html')
 
+@login_required
 def inbox(request):
 
-    messages = ContactMessage.objects.all()
+    messages = ContactMessage.objects.order_by('created_at')
     
-    context = {
-        'messages' : messages
-    }
+    context = {'messages' : messages}
     return render(request, 'core/inbox.html', context)
 
 # Contact View - form for receiving messages and e-mails
