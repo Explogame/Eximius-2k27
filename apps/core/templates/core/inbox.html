@@ -1,0 +1,22 @@
+
+{% extends 'core/base.html' %}
+
+{% block title %}Inbox{% endblock %}
+
+{% block content %}
+<a href=" {% url 'core:home' %} ">Home</a>
+
+<h2>Your Inbox</h2>
+
+<div>
+    
+    {% for msg in messages %}
+    <p> Name:{{ msg.name }} </p>
+    <p> Message:{{ msg.message }} </p>
+    {% empty %}
+    <p>No messages yet.</p>
+    {% endfor %}
+
+
+</div>
+{% endblock %}

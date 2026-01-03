@@ -12,16 +12,11 @@
 
     <!-- Contact Form -->
     <h2>Contact Us</h2>
-
-    {% if success %}
-        <p>Thank you {{ name }}, your message has been received.</p>
-    {% else %}
         <form method="post">
             {% csrf_token %}
 
             {{ form.as_p }}
             <button type="submit">Send</button>
         </form>
-    {% endif %}
 
 {% endblock %}

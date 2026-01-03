@@ -9,12 +9,6 @@
 
     <a href="{% url 'core:about' %}">About</a>
     <a href="{% url 'core:contact' %}">Contact</a>
-
-    <p> {{ title }} </p>
-
-    {% for member in members %}
-        <p> {{member}} </p>
-        <p> {{ year }} </p>
-    {% endfor %}
+    <a href="{% url 'core:inbox' %}">Inbox</a>
 
 {% endblock %}
