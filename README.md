@@ -6,11 +6,17 @@ A class website for the members of UI Eximius 2k27 class addressing their genera
 
 ## Tech Stack
 
+### Backend
+
 - Python
 - Django
 
+### Frontend
+
 - HTML
 - CSS
+
+### Tools
 
 - Pipenv
 
@@ -18,6 +24,7 @@ A class website for the members of UI Eximius 2k27 class addressing their genera
 
 config/
 core/
+quiz/
 manage.py
 
 ## Setup Instructions

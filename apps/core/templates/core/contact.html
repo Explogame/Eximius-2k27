@@ -1,0 +1,27 @@
+
+{% extends 'core/base.html' %}
+
+{% block title %}Contact{% endblock %}
+
+{% block content %}
+    <h1>Contact Eximius-2k27</h1>
+    <p>This is the contact page of the Eximius-2k27 project.</p>
+
+    <a href="{% url 'core:about' %}">About</a>
+    <a href="{% url 'core:home' %}">Home</a>
+
+    <!-- Contact Form -->
+    <h2>Contact Us</h2>
+
+    {% if success %}
+        <p>Thank you {{ name }}, your message has been received.</p>
+    {% else %}
+        <form method="post">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+            <button type="submit">Send</button>
+        </form>
+    {% endif %}
+
+{% endblock %}
