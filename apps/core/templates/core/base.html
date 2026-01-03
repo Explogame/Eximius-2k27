@@ -9,6 +9,13 @@
     <title> {% block title %}Eximius-2k27{% endblock %} </title>
 </head>
 <body>
+
+    <header>
+        <nav>
+            <a href="{% url 'auth:login' %}">Login</a>
+            <a href="#">Sign Up</a>
+        </nav>
+    </header>
     
     {% block content %}
     {% endblock %}
