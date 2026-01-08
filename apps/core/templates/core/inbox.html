@@ -7,15 +7,46 @@
 <a href=" {% url 'core:home' %} ">Home</a>
 
 <h2>Your Inbox</h2>
+<p>Total Messages: {{ total_messages }}</p>
 
 <div>
-    
-    {% for msg in messages %}
-    <p> Name:{{ msg.name }} </p>
-    <p> Message:{{ msg.message }} </p>
+
+    <hr>
+
+    {% for msg in page_obj %}
+        <div style="margin-bottom: 20px; padding: 10px; 
+        background-color: {% if not msg.is_read %}#f5f5f5{% else %}#ffffff{% endif %}; 
+        border-left: 4px solid {% if not msg.is_read %}#007bff{% else %}#cccccc{% endif %};">
+
+            <p><strong>{{ msg.name }}</strong>{{ msg.email }}</p>
+            <p>{{ msg.message }}</p>
+            <small>Received: {{ msg.created_at }}</small>
+
+            {% if not msg.is_read %}
+                <a href="{% url 'core:mark_as_read' msg.id %}">Mark as Read</a>
+            {% endif %}
+        </div>
     {% empty %}
-    <p>No messages yet.</p>
+            <p>No messages yet.</p>
     {% endfor %}
+
+    <div style="margin-top: 20px;">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
 
 
 </div>
