@@ -1,0 +1,23 @@
+
+{% extends 'core/base.html' %}
+
+{% block title %}Message Detail{% endblock %}
+
+{% block content %}
+<a href="{% url 'core:home' %}">Home</a>
+
+<h2>Message from {{ message.name }} ({{ message.email }})</h2>
+
+<p><strong>Email:</strong>{{ message.email }}</p>
+<p><strong>Received at:</strong>{{ message.created_at }}</p>
+
+<hr>
+
+<p>{{ message.message }}</p>
+
+<hr>
+
+<a href="{% url 'core:inbox' %}"> <-- Back to Inbox</a>
+
+{% endblock %}
+

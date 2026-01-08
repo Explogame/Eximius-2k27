@@ -24,7 +24,22 @@
                 {% csrf_token %}
                 <button type="submit">Logout</button>
             </form>
-            <a href="{% url 'core:inbox' %}">Inbox</a>
+            {% if user.is_staff %}
+            <a href="{% url 'core:inbox' %}">
+                Inbox
+                {% if unread_count > 0 %}
+                    <span style="background: red;
+                    color: white;
+                    padding: 2px 6px;
+                    border-radius: 10px;
+                    font-size: 12px;">
+                        ({{ unread_count }})
+                    </span>
+                {% endif %}
+            </a>
+            {% endif %}
+
+
             {% else %}
             <a href="{% url 'auth:login' %}">Login</a>
             <a href="{% url 'auth:signup' %}">Sign Up</a>

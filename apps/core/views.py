@@ -1,5 +1,6 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.paginator import Paginator
 
 from .forms import ContactMessageForm, SignUpForm
@@ -14,7 +15,11 @@ def home(request):
 def about(request):
     return render(request, 'core/about.html')
 
+def staff_required(user):
+    return user.is_staff
+
 @login_required
+@user_passes_test(staff_required)
 def inbox(request):
 
     messages_list = ContactMessage.objects.order_by('-created_at')
@@ -29,6 +34,8 @@ def inbox(request):
         }
     return render(request, 'core/inbox.html', context)
 
+@login_required
+@user_passes_test(staff_required)
 def mark_as_read(request, message_id):
     try:
         message = ContactMessage.objects.get(id=message_id)
@@ -47,6 +54,17 @@ def signup(request):
     else:
         form = SignUpForm(request.POST)
     return render(request, 'core/signup.html', {'form' : form})
+
+@login_required
+@user_passes_test(staff_required)
+def message_detail(request, message_id):
+    message = get_object_or_404(ContactMessage, id=message_id)
+
+    if not message.is_read:
+        message.is_read = True
+        message.save()
+
+    return render(request, 'core/message_detail.html', {'message': message})
 
 
 # Contact View - form for receiving messages and e-mails

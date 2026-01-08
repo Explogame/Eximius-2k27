@@ -18,8 +18,12 @@
         background-color: {% if not msg.is_read %}#f5f5f5{% else %}#ffffff{% endif %}; 
         border-left: 4px solid {% if not msg.is_read %}#007bff{% else %}#cccccc{% endif %};">
 
-            <p><strong>{{ msg.name }}</strong>{{ msg.email }}</p>
-            <p>{{ msg.message }}</p>
+            <p><strong><a href="{% url 'core:message_detail' msg.id %}">
+                {{ msg.name }}{{ msg.email }}
+            </a></strong></p>
+
+            <p>{{ msg.message|truncatewords:20 }}</p>
+            
             <small>Received: {{ msg.created_at }}</small>
 
             {% if not msg.is_read %}
