@@ -2,6 +2,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
 from django.core.paginator import Paginator
+from django.utils.timezone import now
+from django.db.models import Count
 
 from .forms import ContactMessageForm, SignUpForm
 from .models import ContactMessage
@@ -54,6 +56,23 @@ def mark_as_read(request, message_id):
     except ContactMessage.DoesNotExist:
         pass
     return redirect('core:inbox')
+
+@login_required
+@permission_required('core.can_view_dashboard', raise_exception=True)
+def dashboard(request):
+    total_messages = ContactMessage.objects.count()
+    unread_messages = ContactMessage.objects.filter(is_read=False, is_archived=False).count()
+    archived_messages = ContactMessage.objects.filter(is_archived=True).count()
+    today_messages = ContactMessage.objects.filter(created_at__date=now().date()).count()
+
+    context = {
+        'total_messages' : total_messages,
+        'unread_messsages' : unread_messages,
+        'archived_messages' : archived_messages,
+        'today_messages' : today_messages,
+    }
+
+    return render(request, 'core/dashboard.html', context)
 
 def signup(request):
     if request.method == 'POST':

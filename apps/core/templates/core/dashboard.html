@@ -1,0 +1,32 @@
+{% extends 'core/base.html' %} {% block content %}
+<h2>Dashboard</h2>
+
+<div
+  style="
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+  "
+>
+  <div>
+    <h3>Total Messages</h3>
+    <p>{{ total_messages }}</p>
+  </div>
+
+  <div>
+    <h3>Unread</h3>
+    <p>{{ unread_messages }}</p>
+  </div>
+
+  <div>
+    <h3>Archived</h3>
+    <p>{{ archived_messages }}</p>
+  </div>
+
+  <div>
+    <h3>Today</h3>
+    <p>{{ today_messages }}</p>
+  </div>
+</div>
+
+{% endblock %}

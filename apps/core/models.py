@@ -14,6 +14,7 @@ class ContactMessage(models.Model):
             ("can_view_inbox", "Can view inbox"),
             ('can_mark_as_read', "Can mark messages as read"),
             ('can_archive_message', "Can archive messages"),
+            ('can_view_dashboard', 'can view dashboard'),
         ]
 
     def __str__(self):
