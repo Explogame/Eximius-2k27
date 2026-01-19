@@ -27,8 +27,8 @@
 
     {% if not msg.is_read %}
     <a href="{% url 'core:mark_as_read' msg.id %}">Mark as Read</a>
-    {% endif %} {% if perms.core.can_delete_messages %}
-    <a href="{% url 'core:delete_message' msg.id %}">Delete</a>
+    {% endif %} {% if perms.core.can_archive_messages %}
+    <a href="{% url 'core:archive_message' msg.id %}">Archive</a>
     {% endif %}
   </div>
   {% empty %}

@@ -23,7 +23,7 @@ def staff_required(user):
 @permission_required('core.can_view_inbox', raise_exception=True)
 def inbox(request):
 
-    messages_list = ContactMessage.objects.order_by('-created_at')
+    messages_list = ContactMessage.objects.filter(is_archived=False).order_by('-created_at')
 
     paginator = Paginator(messages_list, 5)  # Show 5 messages per page.
     page_number = request.GET.get('page')
@@ -36,23 +36,23 @@ def inbox(request):
     return render(request, 'core/inbox.html', context)
 
 @login_required
-@user_passes_test(staff_required)
-@permission_required('core.can_mark_as_read', raise_exception=True)
-def mark_as_read(request, message_id):
-    try:
-        message = ContactMessage.objects.get_object_or_404(id=message_id)
-        message.is_read = True
-        message.save()
-    except ContactMessage.DoesNotExist:
-        pass
+@permission_required('core.can_archive_message', raise_exception=True)
+def archive_message(request, message_id):
+    message = get_object_or_404(ContactMessage, id=message_id)
+    message.is_archived = True
+    message.save()
     return redirect('core:inbox')
 
 @login_required
 @user_passes_test(staff_required)
-@permission_required('core.can_delete_messages', raise_exception=True)
-def delete_message(request, message_id):
-    message = get_object_or_404(ContactMessage, id=message_id)
-    message.delete()
+@permission_required('core.can_mark_as_read', raise_exception=True)
+def mark_as_read(request, message_id):
+    try:
+        message = get_object_or_404(ContactMessage, id=message_id)
+        message.is_read = True
+        message.save()
+    except ContactMessage.DoesNotExist:
+        pass
     return redirect('core:inbox')
 
 def signup(request):
