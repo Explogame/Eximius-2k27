@@ -8,5 +8,12 @@ class ContactMessage(models.Model):
     is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        permissions = [
+            ("can_view_inbox", "Can view inbox"),
+            ('can_mark_as_read', "Can mark messages as read"),
+            ('can_delete_messages', "Can delete messages"),
+        ]
+
     def __str__(self):
         return f"Message from {self.name} - {'Read' if self.is_read else 'Unread'}"

@@ -1,6 +1,6 @@
 
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
 from django.core.paginator import Paginator
 
 from .forms import ContactMessageForm, SignUpForm
@@ -20,6 +20,7 @@ def staff_required(user):
 
 @login_required
 @user_passes_test(staff_required)
+@permission_required('core.can_view_inbox', raise_exception=True)
 def inbox(request):
 
     messages_list = ContactMessage.objects.order_by('-created_at')
@@ -36,13 +37,22 @@ def inbox(request):
 
 @login_required
 @user_passes_test(staff_required)
+@permission_required('core.can_mark_as_read', raise_exception=True)
 def mark_as_read(request, message_id):
     try:
-        message = ContactMessage.objects.get(id=message_id)
+        message = ContactMessage.objects.get_object_or_404(id=message_id)
         message.is_read = True
         message.save()
     except ContactMessage.DoesNotExist:
         pass
+    return redirect('core:inbox')
+
+@login_required
+@user_passes_test(staff_required)
+@permission_required('core.can_delete_messages', raise_exception=True)
+def delete_message(request, message_id):
+    message = get_object_or_404(ContactMessage, id=message_id)
+    message.delete()
     return redirect('core:inbox')
 
 def signup(request):
