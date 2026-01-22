@@ -1,0 +1,8 @@
+<h2>My Quiz History</h2>
+
+{% for a in attempts %}
+<p>
+  {{ a.quiz.title }} | Score: {{ a.score }}
+  <a href="{% url 'quiz_result' a.id %}">View</a>
+</p>
+{% endfor %}

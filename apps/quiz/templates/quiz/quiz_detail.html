@@ -1,0 +1,12 @@
+<h2>{{ quiz.title }}</h2>
+<p>{{ quiz.description }}</p>
+<p>Created by: {{ quiz.creator.username }}</p>
+<p>Total Questions: {{ questions_count }}</p>
+
+{% if attempted %}
+<p>You have already attempted this quiz.</p>
+<p>Total Attempts: {{ attempts }}</p>
+<a href="{% url 'my_attempts' %}">attempts</a>
+{% else %}
+<a href="{% url 'take_quiz' quiz.id %}">Start Quiz</a>
+{% endif %}

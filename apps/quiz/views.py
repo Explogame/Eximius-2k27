@@ -111,4 +111,26 @@ def quiz_result(request, attempt_id):
     return render(request, 'quiz/quiz_result.html', {'attempt':attempt})
     
                 
+# User Quiz History
+@login_required
+def my_attempts(request):
+    attempts = Attempt.objects.filter(user=request.user).order_by('-completed_at')
+    return render(request, 'quiz/my_attempts.html', {'attempts':attempts})
+
+
+# Quiz Detail Page View
+def quiz_detail(request, quiz_id):
+    quiz = get_object_or_404(Quiz, id=quiz_id)
+    questions_count = quiz.questions.count()
+    attempts = Attempt.objects.filter(quiz=quiz).count()
+    attempted = Attempt.objects.filter(user=request.user, quiz=quiz)
+
+    context = {
+        'quiz':quiz,
+        'question_count': questions_count,
+        'attempts': attempts,
+        'attempted': attempted,
+    }
+
+    return render(request, 'quiz/quiz_detail.html', context)
 

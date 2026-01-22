@@ -2,7 +2,7 @@
 
 {% for quiz in quizzes %}
 <p>
-  {{ quiz.title }}
+  <a href="{% url 'quiz_detail' quiz.id %}">{{ quiz.title }}</a>
   <a href="{% url 'take_quiz' quiz.id %}">Start</a>
 </p>
 {% endfor %}

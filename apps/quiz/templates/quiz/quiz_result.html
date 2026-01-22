@@ -1,9 +1,11 @@
-<h2>Result</h2>
-<p>Score: {{ attempt.scor }}</p>
+<h2>{{ attempt.quiz.title }} Result</h2>
+<p>Score: {{ attempt.score }}</p>
 
 {% for ans in attempt.answers.all %}
 <p>
   {{ ans.question.text }} <br />
-  Your answer: {{ ans.selected_choice }} | Correct: {{ ans.is_correct }}
+  Your answer: {{ ans.selected_choice }} | {% if ans.is_correct %}✅
+  <!-- added space for template code -->
+  {% else %}❌{% endif %}
 </p>
 {% endfor %}
