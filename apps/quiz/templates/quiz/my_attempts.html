@@ -1,8 +1,18 @@
-<h2>My Quiz History</h2>
+{% extends 'core/base.html' %} {% block content %}
+<h2>My Quiz Attempts</h2>
 
-{% for a in attempts %}
-<p>
-  {{ a.quiz.title }} | Score: {{ a.score }}
-  <a href="{% url 'quiz_result' a.id %}">View</a>
-</p>
-{% endfor %}
+<div class="grid">
+  {% for a in attempts %}
+  <h3>{{ a.quiz.title }}</h3>
+  <p>Date: {{ a.completed_at|date:"d M Y H:i" }}</p>
+  <p>
+    Score:
+    <span
+      class="badge {% if a.score >= 0 %}badge-success{% else %}badge-error{% endif %}"
+      >{{ a.score }}</span
+    >
+  </p>
+  <a class="btn" href="{% url 'quiz:quiz_result' a.id %}">View</a>
+  {% endfor %}
+</div>
+{% endblock %}

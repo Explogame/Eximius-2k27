@@ -8,6 +8,10 @@ from django.db.models import Count
 from .forms import ContactMessageForm, SignUpForm
 from .models import ContactMessage
 
+from django.db.models import Count, Avg
+from django.utils.timezone import now, timedelta
+from apps.quiz.models import Quiz, Attempt
+
 # Create your views here.
 
 def home(request):
@@ -60,19 +64,50 @@ def mark_as_read(request, message_id):
 @login_required
 @permission_required('core.can_view_dashboard', raise_exception=True)
 def dashboard(request):
+    today = now().date()
+
+    # Messages
     total_messages = ContactMessage.objects.count()
-    unread_messages = ContactMessage.objects.filter(is_read=False, is_archived=False).count()
+    unread_messages = ContactMessage.objects.filter(is_read=False).count()
     archived_messages = ContactMessage.objects.filter(is_archived=True).count()
-    today_messages = ContactMessage.objects.filter(created_at__date=now().date()).count()
+    today_messages = ContactMessage.objects.filter(created_at__date=today).count()
 
-    context = {
-        'total_messages' : total_messages,
-        'unread_messsages' : unread_messages,
-        'archived_messages' : archived_messages,
-        'today_messages' : today_messages,
-    }
+    # Quizzes
+    total_quizzes = Quiz.objects.count()
+    total_attempts = Attempt.objects.count()
+    avg_score = Attempt.objects.aggregate(avg=Avg('score'))['avg'] or 0
+    negative_quizzes = Quiz.objects.filter(negative_mark__gt=0).count()
 
-    return render(request, 'core/dashboard.html', context)
+    # Most attempted quizzes
+    top_quizzes = (
+        Attempt.objects.values('quiz__title')
+        .annotate(num_attempts=Count('id'))
+        .order_by('-num_attempts')[:3]
+    )
+
+    # Hardest quizzes (lowest average score)
+    hardest_quizzes = (
+        Attempt.objects.values('quiz__title')
+        .annotate(avg_score=Avg('score'))
+        .order_by('avg_score')[:3]
+    )
+
+    # Recently created quizzes
+    recent_quizzes = Quiz.objects.order_by('-created_at')[:5]
+
+    return render(request, 'core/dashboard.html', {
+        'total_messages': total_messages,
+        'unread_messages': unread_messages,
+        'archived_messages': archived_messages,
+        'today_messages': today_messages,
+        'total_quizzes': total_quizzes,
+        'total_attempts': total_attempts,
+        'avg_score': avg_score,
+        'negative_quizzes': negative_quizzes,
+        'top_quizzes': top_quizzes,
+        'hardest_quizzes': hardest_quizzes,
+        'recent_quizzes': recent_quizzes,
+    })
 
 def signup(request):
     if request.method == 'POST':

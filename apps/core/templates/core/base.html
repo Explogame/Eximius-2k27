@@ -6,56 +6,36 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}Eximius-2k27{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'static/base.css' %}" />
+    <link rel="stylesheet" href="{% static 'core/base.css' %}" />
+    {% block extra_css %}{% endblock %}
   </head>
   <body>
-    <header>
-      <nav
-        style="
-          display: flex;
-          gap: 20px;
-          padding: 10px;
-          border-bottom: 1px solid #ccc;
-        "
-      >
-        <a href="{% url 'core:home' %}">Home</a>
-        <a href="{% url 'core:about' %}">About</a>
-        <a href="{% url 'core:contact' %}">Contact</a>
-        <a href="{% url 'core:dashboard' %}">Dashboard</a>
-
-        {% if user.is_authenticated %}
-        <span>Hi, {{ user.username }} </span>
-        <form
-          action="{% url 'auth:logout' %}"
-          method="post"
-          style="display: inline"
-        >
-          {% csrf_token %}
-          <button type="submit">Logout</button>
-        </form>
-        {% if perms.core.can_view_inbox %}
-        <a href="{% url 'core:inbox' %}">
-          Inbox {% if unread_count > 0 %}
-          <span
-            style="
-              background: red;
-              color: white;
-              padding: 2px 6px;
-              border-radius: 10px;
-              font-size: 12px;
-            "
-          >
-            ({{ unread_count }})
-          </span>
-          {% endif %}
+    <nav class="navbar">
+      <div class="navbar-left">
+        <a href="{% url 'core:home' %}" class="logo">
+          <img
+            src="{% static 'core/logo.png' %}"
+            alt="Eximius 2k27"
+            class="logo"
+          />
         </a>
-        {% endif %} {% else %}
+      </div>
+      <div class="navbar-right">
+        {% if user.is_authenticated %}
+        <a href="{% url 'core:home' %}">Home</a>
+        <a href="{% url 'quiz:quiz_list' %}">Quizzes</a>
+        {% else %}
         <a href="{% url 'auth:login' %}">Login</a>
         <a href="{% url 'auth:signup' %}">Sign Up</a>
         {% endif %}
-      </nav>
-    </header>
-
-    {% block content %} {% endblock %}
+      </div>
+    </nav>
+    <div class="container">{% block content %} {% endblock %}</div>
+    <footer class="footer">
+      <div class="container">
+        <p>&copy;{{ current_year }} Eximius-2k27 Website</p>
+        <p>Made by Shadot</p>
+      </div>
+    </footer>
   </body>
 </html>

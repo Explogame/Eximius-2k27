@@ -1,14 +1,39 @@
-
-{% extends 'core/base.html' %}
-
-{% block title %}Home{% endblock %}
-
+{% extends 'core/base.html' %} {% block title %}Home{% endblock %}
+<!-- Home Page Content -->
 {% block content %}
+<div class="container home-page">
+  <div class="home-header card">
     <h1>Welcome to Eximius-2k27</h1>
     <p>This is the home page of the Eximius-2k27 project.</p>
+    <p>Updates will be coming later</p>
 
-    <a href="{% url 'core:about' %}">About</a>
-    <a href="{% url 'core:contact' %}">Contact</a>
-    <a href="{% url 'core:inbox' %}">Inbox</a>
+    <div class="home-links">
+      <a href="{% url 'core:about' %}" class="btn btn-small btn-primary"
+        >About</a
+      >
+      <a href="{% url 'core:contact' %}" class="btn btn-small btn-primary"
+        >Contact</a
+      >
+      <a href="{% url 'core:inbox' %}" class="btn btn-small btn-primary"
+        >Inbox {% if unread_count > 0 %}
+        <span class="badge badge-error">({{ unread_count }})</span>
+        {% endif %}
+      </a>
+    </div>
 
+    {% if user.is_authenticated %}
+    <div class="user-greeting">
+      <span>Hi, <strong>{{ user.username }}</strong></span>
+      <form
+        action="{% url 'auth:logout' %}"
+        method="post"
+        style="display: inline"
+      >
+        {% csrf_token %}
+        <button type="submit" class="btn btn-small btn-warning">Logout</button>
+      </form>
+    </div>
+    {% endif %}
+  </div>
+</div>
 {% endblock %}

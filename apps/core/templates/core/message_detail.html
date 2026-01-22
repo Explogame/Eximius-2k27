@@ -1,23 +1,40 @@
-
-{% extends 'core/base.html' %}
-
-{% block title %}Message Detail{% endblock %}
-
+{% extends 'core/base.html' %} {% block title %}Message Detail{% endblock %}
+<!-- Needed Space-->
 {% block content %}
-<a href="{% url 'core:home' %}">Home</a>
+<div class="container inbox-page">
+  <a href="{% url 'core:home' %}" class="btn" style="margin-bottom: 1rem"
+    >Home</a
+  >
 
-<h2>Message from {{ message.name }} ({{ message.email }})</h2>
+  <div class="card message-detail-card">
+    <h2>Message from {{ message.name }}</h2>
+    <p><strong>Email:</strong> {{ message.email }}</p>
+    <p>
+      <strong>Received at:</strong> {{ message.created_at|date:"d M Y H:i" }}
+    </p>
 
-<p><strong>Email:</strong>{{ message.email }}</p>
-<p><strong>Received at:</strong>{{ message.created_at }}</p>
+    <hr />
 
-<hr>
+    <p class="msg-body">{{ message.message }}</p>
 
-<p>{{ message.message }}</p>
-
-<hr>
-
-<a href="{% url 'core:inbox' %}"> <-- Back to Inbox</a>
-
+    <div class="msg-actions">
+      {% if not message.is_read %}
+      <a
+        href="{% url 'core:mark_as_read' message.id %}"
+        class="btn btn-small btn-info"
+        >Mark as Read</a
+      >
+      {% endif %} {% if perms.core.can_archive_messages %}
+      <a
+        href="{% url 'core:archive_message' message.id %}"
+        class="btn btn-small btn-warning"
+        >Archive</a
+      >
+      {% endif %}
+      <a href="{% url 'core:inbox' %}" class="btn btn-small btn-secondary"
+        >Back to Inbox</a
+      >
+    </div>
+  </div>
+</div>
 {% endblock %}
-

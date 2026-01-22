@@ -1,25 +1,25 @@
-
-
 from .base import *
-# import dj_database_url
+import dj_database_url
 
-ALLOWED_HOSTS = [
-    "eximiusdomain.com"
-    "www.eximiusdomain.com"
-    "eximius-2k27.onrender.com"
-]
+DEBUG = False
+ALLOWED_HOSTS = ['eximius.onrender.com']  # Replace with your app domain
 
-'''
+# Supabase/PostgreSQL
 DATABASES = {
-    "default" : dj_database_url.config(
-        default=os.getenv("DATABASE_URL"),
-        conn_max_age=600,
-        ssl_required=True,
-    )
+    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
 }
-'''
 
-STATIC_ROOT = BASE_DIR/"staticfiles"
-STATIC_URL = "/static/"
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# Security
+CSRF_TRUSTED_ORIGINS = ['https://your-app.onrender.com']
+SECURE_SSL_REDIRECT = True
+
+# Static
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}
 

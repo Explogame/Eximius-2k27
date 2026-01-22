@@ -1,7 +1,9 @@
+{% extends 'core/base.html' %} {% block content %}
 <h2>Add Question to {{quiz.title}}</h2>
 
 <form method="post">
   {% csrf_token %} {{ form.as_p }}
 
-  <button>Add Question</button>
+  <button type="submit" class="btn">Add Options</button>
 </form>
+{% endblock %}

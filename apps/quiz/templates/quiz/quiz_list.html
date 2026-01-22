@@ -1,8 +1,19 @@
+{% extends 'core/base.html' %} {% block content %}
 <h2>Available Quizzes</h2>
 
-{% for quiz in quizzes %}
-<p>
-  <a href="{% url 'quiz_detail' quiz.id %}">{{ quiz.title }}</a>
-  <a href="{% url 'take_quiz' quiz.id %}">Start</a>
-</p>
-{% endfor %}
+<a href="{% url 'quiz:create_quiz' %}" class="btn">Create Quiz</a>
+<a href="{% url 'quiz:my_attempts' %}" class="btn">View Past Attempts</a>
+
+<div class="grid">
+  {% for quiz in quizzes %}
+  <div class="card quiz-card">
+    <h3>{{ quiz.title }}</h3>
+    <p>{{ quiz.description }}</p>
+    <p>
+      <span class="badge badge-info">Questions:{{ quiz.questions.count }}</span>
+    </p>
+    <a href="{% url 'quiz:quiz_detail' quiz.id %}" class="btn">View / Start</a>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

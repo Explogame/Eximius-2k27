@@ -1,22 +1,32 @@
-
-{% extends 'core/base.html' %}
-
-{% block title %}Contact{% endblock %}
-
+{% extends 'core/base.html' %} {% block title %}Contact{% endblock %}
+<!-- Content Block -->
 {% block content %}
+<div class="container contact-page">
+  <!-- Page Header -->
+  <div class="page-header">
     <h1>Contact Eximius-2k27</h1>
     <p>This is the contact page of the Eximius-2k27 project.</p>
 
-    <a href="{% url 'core:about' %}">About</a>
-    <a href="{% url 'core:home' %}">Home</a>
+    <div class="home-links">
+      <a href="{% url 'core:about' %}" class="btn btn-small btn-primary"
+        >About</a
+      >
+      <a href="{% url 'core:home' %}" class="btn btn-small btn-primary">Home</a>
+    </div>
+  </div>
 
-    <!-- Contact Form -->
+  <!-- Contact Form Card -->
+  <div class="card contact-card">
     <h2>Contact Us</h2>
-        <form method="post">
-            {% csrf_token %}
 
-            {{ form.as_p }}
-            <button type="submit">Send</button>
-        </form>
+    {% if messages %} {% for message in messages %}
+    <p class="alert alert-success">{{ message }}</p>
+    {% endfor %} {% endif %}
 
+    <form method="post">
+      {% csrf_token %} {{ form.as_p }}
+      <button type="submit" class="btn btn-primary">Send</button>
+    </form>
+  </div>
+</div>
 {% endblock %}

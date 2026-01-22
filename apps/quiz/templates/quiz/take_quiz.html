@@ -1,13 +1,75 @@
+{% extends 'core/base.html' %} {% block content %}
 <h2>{{ quiz.title }}</h2>
 
-<form method="post">
+<form method="post" id="quizForm">
   {% csrf_token %} {% for q in questions %}
-  <p>{{ q.text }}</p>
-  {% for c in q.choices.all %}
-  <label>
-    <input type="radio" name="{{ q.id }}" value="{{ c.id }}" />
-    {{ c.text }} </label
-  ><br />
-  {% endfor %} {% endfor %}
-  <button>Submit</button>
+  <div class="card question-card" data-question="{{ forloop.counter0 }}">
+    <p class="question-text">{{ q.text }}</p>
+
+    {% for c in q.choices.all %}
+    <label class="choice-label">
+      <input type="radio" name="question_{{ q.id }}" value="{{ c.id }}" />
+      {{ c.text }}
+    </label>
+    {% endfor %}
+  </div>
+  {% endfor %}
+
+  <div class="quiz-nav">
+    <button type="button" class="btn" id="prevBtn">Previous</button>
+    <button type="button" class="btn" id="nextBtn">Next</button>
+    <button type="submit" class="btn" id="submitBtn" style="display: none">
+      Submit Quiz
+    </button>
+  </div>
+
+  <p id="progress" style="margin-top: 0.5rem; font-weight: bold"></p>
 </form>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const questions = document.querySelectorAll(".question-card");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const submitBtn = document.getElementById("submitBtn");
+    const progress = document.getElementById("progress");
+    let currentQuestion = 0;
+
+    function showQuestion(index) {
+      questions.forEach((q, i) => q.classList.remove("active"));
+      questions[index].classList.add("active");
+
+      // Show/hide buttons
+      prevBtn.style.display = index === 0 ? "none" : "inline-block";
+      nextBtn.style.display =
+        index === questions.length - 1 ? "none" : "inline-block";
+      submitBtn.style.display =
+        index === questions.length - 1 ? "inline-block" : "none";
+
+      // Update progress text
+      progress.textContent = `Question ${index + 1} of ${questions.length}`;
+    }
+
+    // Initialize first question
+    showQuestion(currentQuestion);
+
+    // Button listeners
+    nextBtn.addEventListener("click", function () {
+      if (currentQuestion < questions.length - 1) {
+        currentQuestion++;
+        showQuestion(currentQuestion);
+      }
+    });
+
+    prevBtn.addEventListener("click", function () {
+      if (currentQuestion > 0) {
+        currentQuestion--;
+        showQuestion(currentQuestion);
+      }
+    });
+
+    // Debugging (optional, remove later)
+    console.log("Take Quiz page loaded, questions:", questions.length);
+  });
+</script>
+{% endblock %}

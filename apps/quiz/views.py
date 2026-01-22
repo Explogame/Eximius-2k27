@@ -13,7 +13,7 @@ def create_quiz(request):
             quiz = form.save(commit=False)
             quiz.creator = request.user
             quiz.save()
-            return redirect('add_question', quiz_id=quiz.id)
+            return redirect('quiz:add_question', quiz_id=quiz.id)
     else:
         form = QuizForm()
     return render(request, 'quiz/create_quiz.html', {'form': form})
@@ -29,7 +29,7 @@ def add_question(request, quiz_id):
             question = q_form.save(commit=False)
             question.quiz = quiz
             question.save()
-            return redirect('add_choice', question_id=question.id)
+            return redirect('quiz:add_choice', question_id=question.id)
     else:
         q_form = QuestionForm()
 
@@ -51,12 +51,13 @@ def add_choice(request, question_id):
             choice = c_form.save(commit=False)
             choice.question = question
             choice.save()
-            return redirect('add_choice', question_id=question.id)
+            return redirect('quiz:add_choice', question_id=question.id)
     else:
         c_form = ChoiceForm()
 
     context = {
         'question' : question,
+        'quiz': question.quiz,
         'form' : c_form,
     }
     
@@ -65,7 +66,7 @@ def add_choice(request, question_id):
 
 # Quiz List View To Show Available Quizzes
 def quiz_list(request):
-    quizzes = Quiz.objects.all()
+    quizzes = Quiz.objects.order_by('-created_at')
     return render(request, 'quiz/quiz_list.html', {'quizzes' : quizzes})
 
 
@@ -95,7 +96,7 @@ def take_quiz(request, quiz_id):
 
         attempt.score = score
         attempt.save()
-        return redirect('quiz_result', attempt_id=attempt.id)
+        return redirect('quiz:quiz_result', attempt_id=attempt.id)
 
     context = {
         'quiz':quiz,
@@ -127,7 +128,7 @@ def quiz_detail(request, quiz_id):
 
     context = {
         'quiz':quiz,
-        'question_count': questions_count,
+        'questions_count': questions_count,
         'attempts': attempts,
         'attempted': attempted,
     }

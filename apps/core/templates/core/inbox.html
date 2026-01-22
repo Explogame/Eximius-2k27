@@ -1,56 +1,69 @@
 {% extends 'core/base.html' %} {% block content %}
-<a href=" {% url 'core:home' %} ">Home</a>
-
-<h2>Your Inbox</h2>
-<p>Total Messages: {{ total_messages }}</p>
-
-<div>
-  <hr />
-
-  {% for msg in page_obj %}
-  <div
-    style="margin-bottom: 20px; padding: 10px; 
-        background-color: {% if not msg.is_read %}#f5f5f5{% else %}#ffffff{% endif %}; 
-        border-left: 4px solid {% if not msg.is_read %}#007bff{% else %}#cccccc{% endif %};"
+<div class="container inbox-page">
+  <a href="{% url 'core:home' %}" class="btn" style="margin-bottom: 1rem"
+    >Home</a
   >
-    <p>
-      <strong
-        ><a href="{% url 'core:message_detail' msg.id %}">
-          {{ msg.name }}{{ msg.email }}
-        </a></strong
+
+  <h2>Your Inbox</h2>
+  <p>
+    Total Messages: <span class="badge badge-info">{{ total_messages }}</span>
+  </p>
+
+  <div class="inbox-list">
+    {% for msg in page_obj %}
+    <div
+      class="card inbox-card {% if not msg.is_read %}unread{% else %}read{% endif %}"
+    >
+      <p class="msg-sender">
+        <strong>
+          <a href="{% url 'core:message_detail' msg.id %}">
+            {{ msg.name }} {{ msg.email }}
+          </a>
+        </strong>
+      </p>
+
+      <p class="msg-preview">{{ msg.message|truncatewords:20 }}</p>
+
+      <small class="msg-date"
+        >Received: {{ msg.created_at|date:"d M Y H:i" }}</small
       >
-    </p>
 
-    <p>{{ msg.message|truncatewords:20 }}</p>
-
-    <small>Received: {{ msg.created_at }}</small>
-
-    {% if not msg.is_read %}
-    <a href="{% url 'core:mark_as_read' msg.id %}">Mark as Read</a>
-    {% endif %} {% if perms.core.can_archive_messages %}
-    <a href="{% url 'core:archive_message' msg.id %}">Archive</a>
-    {% endif %}
+      <div class="msg-actions">
+        {% if not msg.is_read %}
+        <a
+          href="{% url 'core:mark_as_read' msg.id %}"
+          class="btn btn-small btn-info"
+          >Mark as Read</a
+        >
+        {% endif %} {% if perms.core.can_archive_messages %}
+        <a
+          href="{% url 'core:archive_message' msg.id %}"
+          class="btn btn-small btn-warning"
+          >Archive</a
+        >
+        {% endif %}
+      </div>
+    </div>
+    {% empty %}
+    <p>No messages yet.</p>
+    {% endfor %}
   </div>
-  {% empty %}
-  <p>No messages yet.</p>
-  {% endfor %}
 
-  <div style="margin-top: 20px">
-    <span class="step-links">
-      {% if page_obj.has_previous %}
-      <a href="?page=1">&laquo; first</a>
-      <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-      {% endif %}
+  <!-- Pagination -->
+  <div class="pagination">
+    {% if page_obj.has_previous %}
+    <a href="?page=1">&laquo; first</a>
+    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+    {% endif %}
 
-      <span class="current">
-        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-      </span>
-
-      {% if page_obj.has_next %}
-      <a href="?page={{ page_obj.next_page_number }}">next</a>
-      <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-      {% endif %}
+    <span class="current">
+      Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
     </span>
+
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}">next</a>
+    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+    {% endif %}
   </div>
 </div>
 {% endblock %}

@@ -1,11 +1,20 @@
-<h2>{{ attempt.quiz.title }} Result</h2>
-<p>Score: {{ attempt.score }}</p>
+{% extends 'core/base.html' %} {% block content %}
+<div class="card result-summary">
+  <h2>{{ attempt.quiz.title }}</h2>
+  <p>Score: <span class="badge badge-success">{{ attempt.score }}</span></p>
+</div>
 
 {% for ans in attempt.answers.all %}
-<p>
-  {{ ans.question.text }} <br />
-  Your answer: {{ ans.selected_choice }} | {% if ans.is_correct %}✅
-  <!-- added space for template code -->
-  {% else %}❌{% endif %}
-</p>
-{% endfor %}
+<div
+  class="card answer-card {% if ans.is_correct %}correct{% else %}wrong{% endif %}"
+>
+  <p>{{ ans.question.text }}</p>
+  <p>
+    Your Answer: {{ ans.selected_choice }} {% if ans.is_correct %}
+    <span class="badge badge-success">✅Correct</span>
+    {% else %}
+    <span class="badge badge-error">❌Wrong</span>
+    {% endif %}
+  </p>
+</div>
+{% endfor %} {% endblock %}

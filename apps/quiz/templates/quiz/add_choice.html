@@ -1,7 +1,23 @@
-<h2>Add Choices for: {{ question.text }}</h2>
+{% extends 'core/base.html' %} {% block content %}
+<h2>Add Options for: <br />{{ question.text }}</h2>
 
 <form method="post">
   {% csrf_token %} {{ form.as_p }}
 
-  <button>Add Choice</button>
+  <button type="submit" class="btn">Add Option</button>
 </form>
+
+<h4>Current Options</h4>
+<ul>
+  {% for c in question.choices.all %}
+  <li>{{ c.text }}{% if c.is_correct %}(correct){% endif %}</li>
+  {% endfor %}
+</ul>
+
+<div class="navigation-links">
+  <a class="btn" href="{% url 'quiz:add_question' quiz.id %}"
+    >Add Another Question</a
+  >
+  <a class="btn" href="{% url 'quiz:quiz_detail' quiz.id %}">Finish Quiz</a>
+</div>
+{% endblock %}

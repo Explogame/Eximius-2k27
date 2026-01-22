@@ -1,12 +1,19 @@
-<h2>{{ quiz.title }}</h2>
-<p>{{ quiz.description }}</p>
-<p>Created by: {{ quiz.creator.username }}</p>
-<p>Total Questions: {{ questions_count }}</p>
+{% extends 'core/base.html' %} {% block content %}
+<div class="card quiz-detail-card">
+  <h2>{{ quiz.title }}</h2>
+  <p>{{ quiz.description }}</p>
+  <p>Created by: {{ quiz.creator.username }}</p>
+  <p>
+    Total Questions: <span class="badge badge-info">{{ questions_count }}</span>
+  </p>
 
-{% if attempted %}
-<p>You have already attempted this quiz.</p>
-<p>Total Attempts: {{ attempts }}</p>
-<a href="{% url 'my_attempts' %}">attempts</a>
-{% else %}
-<a href="{% url 'take_quiz' quiz.id %}">Start Quiz</a>
-{% endif %}
+  {% if attempted %}
+  <p class="text-warning">You have already attempted this quiz.</p>
+  <p>Total Attempts: <span class="badge badge-info">{{ attempts }}</span></p>
+  <a class="btn" href="{% url 'quiz:my_attempts' %}">View Attempts</a>
+  <a class="btn" href="{% url 'quiz:take_quiz' quiz.id %}">Take Quiz</a>
+  {% else %}
+  <a class="btn" href="{% url 'quiz:take_quiz' quiz.id %}">Start Quiz</a>
+  {% endif %}
+</div>
+{% endblock %}
