@@ -1,0 +1,9 @@
+<h2>Result</h2>
+<p>Score: {{ attempt.scor }}</p>
+
+{% for ans in attempt.answers.all %}
+<p>
+  {{ ans.question.text }} <br />
+  Your answer: {{ ans.selected_choice }} | Correct: {{ ans.is_correct }}
+</p>
+{% endfor %}

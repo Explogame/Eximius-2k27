@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators  import login_required
-from .models import Quiz, Question
+from .models import Quiz, Question, Attempt, Choice, Answer
 from .forms import QuizForm, QuestionForm, ChoiceForm
 
 # Create your views here.
@@ -62,4 +62,53 @@ def add_choice(request, question_id):
     
     return render(request, 'quiz/add_choice.html', context)
 
+
+# Quiz List View To Show Available Quizzes
+def quiz_list(request):
+    quizzes = Quiz.objects.all()
+    return render(request, 'quiz/quiz_list.html', {'quizzes' : quizzes})
+
+
+# Taking Quiz View
+@login_required
+def take_quiz(request, quiz_id):
+    quiz = get_object_or_404(Quiz, id=quiz_id)
+    questions = quiz.questions.all()
+
+    if request.method == 'POST':
+        score = 0
+        attempt = Attempt.objects.create(user=request.user, quiz=quiz)
+
+        for question in questions:
+            selected = request.POST.get(str(question.id))
+            if selected:
+                choice = Choice.objects.get(id=selected)
+                correct = choice.is_correct
+                if correct:
+                    score += 1
+                else:
+                    score -= quiz.negative_mark
+
+                Answer.objects.create(attempt=attempt,question=question,selected_choice=choice,is_correct=correct)
+            else:
+                Answer.objects.create(attempt=attempt,question=question,selected_choice=None,is_correct=False)
+
+        attempt.score = score
+        attempt.save()
+        return redirect('quiz_result', attempt_id=attempt.id)
+
+    context = {
+        'quiz':quiz,
+        'questions':questions,
+    }
+
+    return render(request, 'quiz/take_quiz.html', context)
+
+
+# Result View
+def quiz_result(request, attempt_id):
+    attempt = get_object_or_404(Attempt, id=attempt_id, user=request.user)
+    return render(request, 'quiz/quiz_result.html', {'attempt':attempt})
+    
+                
 
