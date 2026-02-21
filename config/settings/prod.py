@@ -2,9 +2,6 @@ from .base import *
 import dj_database_url
 import os
 
-# config/settings/prod.py
-from django.contrib.auth.models import User
-from django.db.utils import OperationalError
 
 DEBUG = False
 ALLOWED_HOSTS = ['.onrender.com']
@@ -39,11 +36,3 @@ LOGGING = {
         'level': 'INFO',
     },
 }
-
-
-
-try:
-    if not User.objects.filter(username="Admin").exists():
-        User.objects.create_superuser("Admin", "admin@example.com", "YourStrongPass123")
-except OperationalError:
-    pass
