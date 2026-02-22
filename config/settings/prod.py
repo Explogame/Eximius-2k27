@@ -14,6 +14,7 @@ DATABASES = {
     )
 }
 
+'''
 CSRF_TRUSTED_ORIGINS = ['https://*.onrender.com']
 SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
@@ -40,3 +41,4 @@ LOGGING = {
         'level': 'INFO',
     },
 }
+'''
