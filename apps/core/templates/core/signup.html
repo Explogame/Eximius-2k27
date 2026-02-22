@@ -1,12 +1,14 @@
-
-{% extends 'core/base.html' %}
-
-{% block content %}
+{% extends 'core/base.html' %} {% block content %}
 <h2>Sign Up</h2>
 
 <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Register</button>
+  {% csrf_token %} {% for field in form %}
+  <p>
+    {{ field.label_tag }} {{ field }} {% if field.errors %} {{ field.errors }}
+    {% endif %}
+  </p>
+  {% endfor %}
+
+  <button type="submit">Register</button>
 </form>
 {% endblock %}
