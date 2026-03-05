@@ -1,17 +1,28 @@
-
 from django.urls import path
 from . import views
 
 app_name = 'core'
 
 urlpatterns = [
-    path('', views.home, name='home'), # Home page
-    path('about/', views.about, name='about'), # About page
-    path('contact/', views.contact, name='contact'), # Contact page
+    path('', views.home, name='home'),
+    path('about/', views.about, name='about'),
+    path('contact/', views.contact, name='contact'),
     path('inbox/', views.inbox, name='inbox'),
-    path('mark_as_read/<int:message_id>/', views.mark_as_read, name='mark_as_read'), # Mark message as read
-    path('inbox/<int:message_id>/', views.message_detail, name='message_detail'), # Message detail view
-    path('archive/<int:message_id>/', views.archive_message, name='archive_message'), # Archive message
-    path('dashboard', views.dashboard, name='dashboard'),
-    ]
+    path('inbox/<int:message_id>/', views.message_detail, name='message_detail'),
+    path('mark_as_read/<int:message_id>/', views.mark_as_read, name='mark_as_read'),
+    path('archive/<int:message_id>/', views.archive_message, name='archive_message'),
+    path('dashboard/', views.dashboard, name='dashboard'),  # FIX: added trailing slash
 
+    # Announcements
+    path('announcements/create/', views.create_announcement, name='create_announcement'),
+    path('announcements/<int:announcement_id>/delete/', views.delete_announcement, name='delete_announcement'),
+]
+
+# Temporary — remove after testing
+from django.views.generic import TemplateView
+urlpatterns += [
+    path('test/404/', TemplateView.as_view(template_name='404.html')),
+    path('test/500/', TemplateView.as_view(template_name='500.html')),
+    path('test/403/', TemplateView.as_view(template_name='403.html')),
+    path('test/400/', TemplateView.as_view(template_name='400.html')),
+]

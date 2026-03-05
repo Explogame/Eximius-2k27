@@ -1,12 +1,12 @@
 {% extends 'core/base.html' %}
-{% block title %}Create Quiz{% endblock %}
+{% block title %}New Announcement{% endblock %}
 
 {% block content %}
 <div class="page-hero">
   <div class="container">
     <div class="hero-accent"></div>
-    <h1>Create a Quiz</h1>
-    <p>Fill in the details, then add your questions.</p>
+    <h1>New Announcement</h1>
+    <p>This will appear on the homepage for all users.</p>
   </div>
 </div>
 
@@ -22,7 +22,10 @@
           {% if field.errors %}<ul class="errorlist">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
         </div>
       {% endfor %}
-      <button type="submit" class="btn btn-primary" style="margin-top:0.25rem">Create & Add Questions →</button>
+      <div style="display:flex;gap:0.75rem;margin-top:0.5rem;">
+        <button type="submit" class="btn btn-primary">Post Announcement</button>
+        <a href="{% url 'core:home' %}" class="btn btn-ghost">Cancel</a>
+      </div>
     </form>
   </div>
 </div>

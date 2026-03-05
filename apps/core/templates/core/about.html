@@ -1,12 +1,39 @@
-
 {% extends 'core/base.html' %}
-
 {% block title %}About{% endblock %}
 
 {% block content %}
+<div class="page-hero">
+  <div class="container">
+    <div class="hero-accent"></div>
     <h1>About Eximius-2k27</h1>
-    <p>This is the about page of the Eximius-2k27 project.</p>
+    <p>The official platform for the UI Eximius 2k27 class.</p>
+  </div>
+</div>
 
-    <a href="{% url 'core:home' %}">Home</a>
-    <a href="{% url 'core:contact' %}">Contact</a>
+<div class="container" style="padding-bottom:3rem">
+  <p style="max-width:600px;margin-bottom:2rem;">Eximius-2k27 is a class website built to serve the needs of the UI Eximius 2k27 cohort — hosting quizzes, facilitating communication, and keeping everyone connected.</p>
+
+  <div class="about-grid">
+    <div class="about-feature">
+      <div class="feature-icon">🎓</div>
+      <h3>Built for the Class</h3>
+      <p style="font-size:0.88rem;color:var(--text-muted);">Purpose-built for UI Eximius 2k27 students and staff.</p>
+    </div>
+    <div class="about-feature">
+      <div class="feature-icon">⚡</div>
+      <h3>Tech Stack</h3>
+      <p style="font-size:0.88rem;color:var(--text-muted);">Django backend, HTML/CSS frontend, PostgreSQL database.</p>
+    </div>
+    <div class="about-feature">
+      <div class="feature-icon">🔒</div>
+      <h3>Secure</h3>
+      <p style="font-size:0.88rem;color:var(--text-muted);">Role-based permissions for students and staff.</p>
+    </div>
+  </div>
+
+  <div style="margin-top:2rem;display:flex;gap:0.75rem;flex-wrap:wrap;">
+    <a href="{% url 'core:home' %}" class="btn btn-primary">Home</a>
+    <a href="{% url 'core:contact' %}" class="btn btn-ghost">Contact Us</a>
+  </div>
+</div>
 {% endblock %}

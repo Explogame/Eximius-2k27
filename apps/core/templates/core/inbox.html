@@ -1,68 +1,51 @@
-{% extends 'core/base.html' %} {% block content %}
-<div class="container inbox-page">
-  <a href="{% url 'core:home' %}" class="btn" style="margin-bottom: 1rem"
-    >Home</a
-  >
+{% extends 'core/base.html' %}
+{% block title %}Inbox{% endblock %}
 
-  <h2>Your Inbox</h2>
-  <p>
-    Total Messages: <span class="badge badge-info">{{ total_messages }}</span>
-  </p>
+{% block content %}
+<div class="page-hero">
+  <div class="container">
+    <div class="hero-accent"></div>
+    <h1>Inbox</h1>
+    <p>{{ total_messages }} message{{ total_messages|pluralize }} total</p>
+  </div>
+</div>
 
+<div class="container" style="padding-bottom:3rem">
   <div class="inbox-list">
     {% for msg in page_obj %}
-    <div
-      class="card inbox-card {% if not msg.is_read %}unread{% else %}read{% endif %}"
-    >
+    <div class="inbox-card {% if not msg.is_read %}unread{% else %}read{% endif %}">
       <p class="msg-sender">
-        <strong>
-          <a href="{% url 'core:message_detail' msg.id %}">
-            {{ msg.name }} {{ msg.email }}
-          </a>
-        </strong>
+        <strong><a href="{% url 'core:message_detail' msg.id %}">{{ msg.name }}</a></strong>
+        {% if msg.email %}<span class="text-muted" style="font-weight:400;font-size:0.85rem;"> · {{ msg.email }}</span>{% endif %}
+        {% if not msg.is_read %}<span class="badge badge-info" style="margin-left:0.5rem">Unread</span>{% endif %}
       </p>
-
       <p class="msg-preview">{{ msg.message|truncatewords:20 }}</p>
-
-      <small class="msg-date"
-        >Received: {{ msg.created_at|date:"d M Y H:i" }}</small
-      >
-
+      <small class="msg-date">{{ msg.created_at|date:"d M Y · H:i" }}</small>
       <div class="msg-actions">
         {% if not msg.is_read %}
-        <a
-          href="{% url 'core:mark_as_read' msg.id %}"
-          class="btn btn-small btn-info"
-          >Mark as Read</a
-        >
-        {% endif %} {% if perms.core.can_archive_messages %}
-        <a
-          href="{% url 'core:archive_message' msg.id %}"
-          class="btn btn-small btn-warning"
-          >Archive</a
-        >
+          <a href="{% url 'core:mark_as_read' msg.id %}" class="btn btn-small btn-info">Mark as Read</a>
+        {% endif %}
+        {% if perms.core.can_archive_message %}
+          <a href="{% url 'core:archive_message' msg.id %}" class="btn btn-small btn-warning">Archive</a>
         {% endif %}
       </div>
     </div>
     {% empty %}
-    <p>No messages yet.</p>
+      <div class="card text-center" style="padding:3rem">
+        <p style="color:var(--text-muted)">No messages yet.</p>
+      </div>
     {% endfor %}
   </div>
 
-  <!-- Pagination -->
   <div class="pagination">
     {% if page_obj.has_previous %}
-    <a href="?page=1">&laquo; first</a>
-    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+      <a href="?page=1">&laquo;</a>
+      <a href="?page={{ page_obj.previous_page_number }}">Prev</a>
     {% endif %}
-
-    <span class="current">
-      Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-    </span>
-
+    <span class="current">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
     {% if page_obj.has_next %}
-    <a href="?page={{ page_obj.next_page_number }}">next</a>
-    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+      <a href="?page={{ page_obj.next_page_number }}">Next</a>
+      <a href="?page={{ page_obj.paginator.num_pages }}">&raquo;</a>
     {% endif %}
   </div>
 </div>

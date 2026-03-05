@@ -1,20 +1,42 @@
-{% extends 'core/base.html' %} {% block content %}
-<div class="card result-summary">
-  <h2>{{ attempt.quiz.title }}</h2>
-  <p>Score: <span class="badge badge-success">{{ attempt.score }}</span></p>
+{% extends 'core/base.html' %}
+{% block title %}Result — {{ attempt.quiz.title }}{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <div class="container">
+    <div class="hero-accent"></div>
+    <h1>{{ attempt.quiz.title }}</h1>
+    <p>Quiz complete — here's how you did.</p>
+  </div>
 </div>
 
-{% for ans in attempt.answers.all %}
-<div
-  class="card answer-card {% if ans.is_correct %}correct{% else %}wrong{% endif %}"
->
-  <p>{{ ans.question.text }}</p>
-  <p>
-    Your Answer: {{ ans.selected_choice }} {% if ans.is_correct %}
-    <span class="badge badge-success">✅Correct</span>
-    {% else %}
-    <span class="badge badge-error">❌Wrong</span>
-    {% endif %}
-  </p>
+<div class="container" style="padding-bottom:3rem">
+  <div class="card card-elevated result-summary" style="text-align:center;padding:2rem;">
+    <p style="font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:0.5rem;">Your Score</p>
+    <p style="font-size:3rem;font-weight:700;font-family:var(--font-display);color:{% if attempt.score >= 0 %}var(--success){% else %}var(--error){% endif %}">
+      {{ attempt.score }}
+    </p>
+  </div>
+
+  <p class="section-label">Answer Review</p>
+
+  {% for ans in attempt.answers.all %}
+  <div class="card answer-card {% if ans.is_correct %}correct{% else %}wrong{% endif %}" style="margin-bottom:0.75rem;">
+    <p style="font-weight:600;margin-bottom:0.5rem;">{{ ans.question.text }}</p>
+    <p style="font-size:0.9rem;color:var(--text-muted);">
+      Your answer: <strong style="color:var(--ink);">{{ ans.selected_choice|default:"No answer" }}</strong>
+      {% if ans.is_correct %}
+        <span class="badge badge-success" style="margin-left:0.5rem">✓ Correct</span>
+      {% else %}
+        <span class="badge badge-error" style="margin-left:0.5rem">✗ Wrong</span>
+      {% endif %}
+    </p>
+  </div>
+  {% endfor %}
+
+  <div style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:1.5rem;">
+    <a href="{% url 'quiz:quiz_list' %}" class="btn btn-primary">Back to Quizzes</a>
+    <a href="{% url 'quiz:my_attempts' %}" class="btn btn-ghost">My Attempts</a>
+  </div>
 </div>
-{% endfor %} {% endblock %}
+{% endblock %}

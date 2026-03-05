@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 class ContactMessage(models.Model):
@@ -19,3 +20,27 @@ class ContactMessage(models.Model):
 
     def __str__(self):
         return f"Message from {self.name} - {'Read' if self.is_read else 'Unread'}"
+    
+class Announcement(models.Model):
+    PRIORITY_CHOICES = [
+        ('info',   'Info'),
+        ('normal', 'Normal'),
+        ('urgent', 'Urgent'),
+    ]
+
+    title      = models.CharField(max_length=200)
+    body       = models.TextField()
+    priority   = models.CharField(max_length=10, choices=PRIORITY_CHOICES, default='normal')
+    expires_at = models.DateTimeField(null=True, blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='announcements')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return self.title
+    
+    def is_active(self):
+        from django.utils.timezone import now
+        return self.expires_at is None or self.expires_at > now()
