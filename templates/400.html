@@ -1,20 +1,20 @@
 {% extends 'core/base.html' %}
-{% block title %}500 — Server Error{% endblock %}
+{% block title %}400 — Bad Request{% endblock %}
 
 {% block content %}
 <div class="page-hero">
   <div class="container">
     <div class="hero-accent"></div>
-    <h1>500</h1>
-    <p>We broke something. That's on us.</p>
+    <h1>400</h1>
+    <p>That request didn't make sense — even to us.</p>
   </div>
 </div>
 
 <div class="container" style="padding-bottom:3rem;text-align:center;padding-top:2rem;">
-  <p style="font-size:4rem;margin-bottom:1rem;">💥</p>
-  <h2 style="margin-bottom:0.5rem;">Server Error</h2>
+  <p style="font-size:4rem;margin-bottom:1rem;">🤔</p>
+  <h2 style="margin-bottom:0.5rem;">Bad Request</h2>
   <p style="color:var(--text-muted);max-width:420px;margin:0 auto 2rem;">
-    Something exploded on our end. We're probably already on it — try again in a bit.
+    Something about your request confused the server. Double-check what you were doing and try again.
   </p>
   <a href="/" class="btn btn-primary">Take Me Home</a>
 </div>
