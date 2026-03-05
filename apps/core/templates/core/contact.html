@@ -1,32 +1,46 @@
-{% extends 'core/base.html' %} {% block title %}Contact{% endblock %}
-<!-- Content Block -->
+{% extends 'core/base.html' %}
+{% block title %}Contact{% endblock %}
+
 {% block content %}
-<div class="container contact-page">
-  <!-- Page Header -->
-  <div class="page-header">
-    <h1>Contact Eximius-2k27</h1>
-    <p>This is the contact page of the Eximius-2k27 project.</p>
-
-    <div class="home-links">
-      <a href="{% url 'core:about' %}" class="btn btn-small btn-primary"
-        >About</a
-      >
-      <a href="{% url 'core:home' %}" class="btn btn-small btn-primary">Home</a>
-    </div>
+<div class="page-hero">
+  <div class="container">
+    <div class="hero-accent"></div>
+    <h1>Contact Us</h1>
+    <p>Send a message — we'll get back to you.</p>
   </div>
+</div>
 
-  <!-- Contact Form Card -->
-  <div class="card contact-card">
-    <h2>Contact Us</h2>
+<div class="container">
+  <div class="contact-layout">
+    <div class="contact-info">
+      <h2>Get in touch</h2>
+      <p style="margin-top:0.5rem">Have a question or something to say? Fill out the form and it goes straight to the staff inbox.</p>
+      <div style="margin-top:1.5rem;display:flex;flex-direction:column;gap:0.5rem;">
+        <a href="{% url 'core:home' %}" class="btn btn-ghost btn-small" style="width:fit-content">← Back to Home</a>
+      </div>
+    </div>
 
-    {% if messages %} {% for message in messages %}
-    <p class="alert alert-success">{{ message }}</p>
-    {% endfor %} {% endif %}
+    <div class="card card-elevated">
+      <h3 style="margin-bottom:1.2rem;font-family:var(--font-body);font-size:1rem;font-weight:600;">Send a Message</h3>
 
-    <form method="post">
-      {% csrf_token %} {{ form.as_p }}
-      <button type="submit" class="btn btn-primary">Send</button>
-    </form>
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+
+      <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+          <div class="form-group">
+            {{ field.label_tag }}
+            {{ field }}
+            {% if field.errors %}<ul class="errorlist">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+          </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary" style="margin-top:0.25rem">Send Message</button>
+      </form>
+    </div>
   </div>
 </div>
 {% endblock %}
