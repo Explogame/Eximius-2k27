@@ -1,23 +1,52 @@
-{% extends 'core/base.html' %} {% block content %}
-<h2>Add Options for: <br />{{ question.text }}</h2>
+{% extends 'core/base.html' %}
+{% block title %}Add Choices{% endblock %}
 
-<form method="post">
-  {% csrf_token %} {{ form.as_p }}
+{% block content %}
+<div class="page-hero">
+  <div class="container">
+    <div class="hero-accent"></div>
+    <h1>Add Choices</h1>
+    <p>{{ question.text }}</p>
+  </div>
+</div>
 
-  <button type="submit" class="btn">Add Option</button>
-</form>
+<div class="container" style="padding-bottom:3rem">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start;">
+    <div class="card card-elevated">
+      <h3 style="font-family:var(--font-body);font-size:0.95rem;font-weight:600;margin-bottom:1rem;">Add an Option</h3>
+      <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+          <div class="form-group">
+            {{ field.label_tag }}
+            {{ field }}
+            {% if field.errors %}<ul class="errorlist">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+          </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary btn-small" style="margin-top:0.25rem">Add Option</button>
+      </form>
+    </div>
 
-<h4>Current Options</h4>
-<ul>
-  {% for c in question.choices.all %}
-  <li>{{ c.text }}{% if c.is_correct %}(correct){% endif %}</li>
-  {% endfor %}
-</ul>
+    <div class="card">
+      <h3 style="font-family:var(--font-body);font-size:0.95rem;font-weight:600;margin-bottom:1rem;">Current Options</h3>
+      {% if question.choices.all %}
+        <ul style="list-style:none;padding:0;">
+          {% for c in question.choices.all %}
+          <li style="padding:0.5rem 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+            <span>{{ c.text }}</span>
+            {% if c.is_correct %}<span class="badge badge-success">✓ Correct</span>{% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-muted" style="font-size:0.88rem;">No options added yet.</p>
+      {% endif %}
 
-<div class="navigation-links">
-  <a class="btn" href="{% url 'quiz:add_question' quiz.id %}"
-    >Add Another Question</a
-  >
-  <a class="btn" href="{% url 'quiz:quiz_detail' quiz.id %}">Finish Quiz</a>
+      <div style="margin-top:1.25rem;display:flex;flex-direction:column;gap:0.5rem;">
+        <a href="{% url 'quiz:add_question' quiz.id %}" class="btn btn-small btn-ghost">+ Add Another Question</a>
+        <a href="{% url 'quiz:quiz_detail' quiz.id %}" class="btn btn-small btn-primary">Finish Quiz ✓</a>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

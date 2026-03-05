@@ -1,18 +1,34 @@
-{% extends 'core/base.html' %} {% block content %}
-<h2>My Quiz Attempts</h2>
+{% extends 'core/base.html' %}
+{% block title %}My Attempts{% endblock %}
 
-<div class="grid">
-  {% for a in attempts %}
-  <h3>{{ a.quiz.title }}</h3>
-  <p>Date: {{ a.completed_at|date:"d M Y H:i" }}</p>
-  <p>
-    Score:
-    <span
-      class="badge {% if a.score >= 0 %}badge-success{% else %}badge-error{% endif %}"
-      >{{ a.score }}</span
-    >
-  </p>
-  <a class="btn" href="{% url 'quiz:quiz_result' a.id %}">View</a>
-  {% endfor %}
+{% block content %}
+<div class="page-hero">
+  <div class="container">
+    <div class="hero-accent"></div>
+    <h1>My Attempts</h1>
+    <p>Your quiz history.</p>
+  </div>
+</div>
+
+<div class="container" style="padding-bottom:3rem">
+  {% if attempts %}
+  <div class="about-grid">
+    {% for a in attempts %}
+    <div class="card quiz-card">
+      <h3 style="margin-bottom:0.4rem;">{{ a.quiz.title }}</h3>
+      <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:0.75rem;">{{ a.completed_at|date:"d M Y · H:i" }}</p>
+      <p style="margin-bottom:1rem;">
+        Score: <span class="badge {% if a.score >= 0 %}badge-success{% else %}badge-error{% endif %}">{{ a.score }}</span>
+      </p>
+      <a href="{% url 'quiz:quiz_result' a.id %}" class="btn btn-small btn-primary">View Result</a>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+    <div class="card text-center" style="padding:3rem">
+      <p class="text-muted">You haven't attempted any quizzes yet.</p>
+      <a href="{% url 'quiz:quiz_list' %}" class="btn btn-primary" style="margin-top:1rem">Browse Quizzes</a>
+    </div>
+  {% endif %}
 </div>
 {% endblock %}

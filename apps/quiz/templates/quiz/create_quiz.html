@@ -1,10 +1,29 @@
-{% extends 'core/base.html' %} {% block content %}
+{% extends 'core/base.html' %}
+{% block title %}Create Quiz{% endblock %}
 
-<h2>Create Quiz</h2>
+{% block content %}
+<div class="page-hero">
+  <div class="container">
+    <div class="hero-accent"></div>
+    <h1>Create a Quiz</h1>
+    <p>Fill in the details, then add your questions.</p>
+  </div>
+</div>
 
-<form method="post">
-  {% csrf_token %} {{ form.as_p }}
-
-  <button>Create</button>
-</form>
+<div class="container" style="padding-bottom:3rem">
+  <div class="card card-elevated" style="max-width:560px;">
+    <form method="post">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="form-group">
+          {{ field.label_tag }}
+          {{ field }}
+          {% if field.help_text %}<p class="form-help">{{ field.help_text }}</p>{% endif %}
+          {% if field.errors %}<ul class="errorlist">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-primary" style="margin-top:0.25rem">Create & Add Questions →</button>
+    </form>
+  </div>
+</div>
 {% endblock %}
