@@ -326,12 +326,3 @@ input:focus, textarea:focus, select:focus {
   .auth-card { padding: 1.75rem 1.25rem; }
   .home-hero { padding: 3rem 1rem 2.5rem; }
 }
-
-/* ─── Announcements ──────────────────────────────────────────── */
-.announcement-card {
-  border-left: 4px solid var(--border);
-  transition: box-shadow 0.2s;
-}
-.announcement-urgent { border-left-color: var(--error); background: #fff8f8; }
-.announcement-info   { border-left-color: var(--teal);  background: #f6fffe; }
-.announcement-normal { border-left-color: var(--gold);  }

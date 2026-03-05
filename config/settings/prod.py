@@ -1,25 +1,21 @@
 from .base import *
+import os
 import dj_database_url
 
 DEBUG = False
-ALLOWED_HOSTS = ['eximius.onrender.com']  # Replace with your app domain
 
-# Supabase/PostgreSQL
+ALLOWED_HOSTS = [".onrender.com"]
+
 DATABASES = {
-    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
+    "default": dj_database_url.config(
+        default=os.environ.get("DATABASE_URL"),
+        conn_max_age=600,
+        ssl_require=True,
+    )
 }
 
-# Security
-CSRF_TRUSTED_ORIGINS = ['https://your-app.onrender.com']
+CSRF_TRUSTED_ORIGINS = ["https://*.onrender.com"]
+
 SECURE_SSL_REDIRECT = True
-
-# Static
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'unique-snowflake',
-    }
-}
-
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
