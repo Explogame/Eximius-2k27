@@ -17,12 +17,3 @@ urlpatterns = [
     path('announcements/create/', views.create_announcement, name='create_announcement'),
     path('announcements/<int:announcement_id>/delete/', views.delete_announcement, name='delete_announcement'),
 ]
-
-# Temporary — remove after testing
-from django.views.generic import TemplateView
-urlpatterns += [
-    path('test/404/', TemplateView.as_view(template_name='404.html')),
-    path('test/500/', TemplateView.as_view(template_name='500.html')),
-    path('test/403/', TemplateView.as_view(template_name='403.html')),
-    path('test/400/', TemplateView.as_view(template_name='400.html')),
-]
