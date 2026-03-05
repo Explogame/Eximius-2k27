@@ -12,4 +12,8 @@ urlpatterns = [
     path('mark_as_read/<int:message_id>/', views.mark_as_read, name='mark_as_read'),
     path('archive/<int:message_id>/', views.archive_message, name='archive_message'),
     path('dashboard/', views.dashboard, name='dashboard'),  # FIX: added trailing slash
+
+    # Announcements
+    path('announcements/create/', views.create_announcement, name='create_announcement'),
+    path('announcements/<int:announcement_id>/delete/', views.delete_announcement, name='delete_announcement'),
 ]

@@ -4,13 +4,20 @@ from django.core.paginator import Paginator
 from django.db.models import Count, Avg
 from django.utils.timezone import now
 
-from .forms import ContactMessageForm, SignUpForm
-from .models import ContactMessage
+from .forms import ContactMessageForm, SignUpForm, AnnouncementForm
+from .models import ContactMessage, Announcement
 from apps.quiz.models import Quiz, Attempt
 
 
 def home(request):
-    return render(request, 'core/home.html')
+    from django.utils.timezone import now
+    announcements = Announcement.objects.filter(
+        expires_at__isnull=True
+    ) | Announcement.objects.filter(
+        expires_at__gt=now()
+    )
+    announcements = announcements.order_by('-created_at')
+    return render(request, 'core/home.html', {'announcements': announcements})
 
 
 def about(request):
@@ -130,3 +137,26 @@ def contact(request):
     else:
         form = ContactMessageForm()
     return render(request, 'core/contact.html', {'form': form})
+
+@login_required
+@user_passes_test(staff_required)
+def create_announcement(request):
+    if request.method == 'POST':
+        form = AnnouncementForm(request.POST)
+        if form.is_valid():
+            announcement = form.save(commit=False)
+            announcement.created_by = request.user
+            announcement.save()
+            return redirect('core:home')
+    else:
+        form = AnnouncementForm()
+    return render(request, 'core/create_announcement.html', {'form': form})
+
+
+@login_required
+@user_passes_test(staff_required)
+def delete_announcement(request, announcement_id):
+    announcement = get_object_or_404(Announcement, id=announcement_id)
+    if request.method == 'POST':
+        announcement.delete()
+    return redirect('core:home')
